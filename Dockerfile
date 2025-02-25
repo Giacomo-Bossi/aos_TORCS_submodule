@@ -1,4 +1,5 @@
 FROM ubuntu:latest
+SHELL ["/bin/bash", "-c"]
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -19,6 +20,12 @@ RUN apt install libxxf86vm-dev
 WORKDIR /usr/local/src
 
 ADD torcs-1.3.7.pre_compiled.tar /usr/local/src
+ADD OpenDDS-3.31.0.tar.gz /usr/local/src
+
+RUN cd /usr/local/src/OpenDDS-3.31.0    && \
+    ./configure                         && \
+    make -j 4                           
+    
 
 #copy scrips in the container
 COPY scripts/full_compile.bash /usr/local/src/full_compile.bash
@@ -26,9 +33,16 @@ COPY scripts/full_compile.bash /usr/local/src/full_compile.bash
 ENV WORK_BASE=/usr/local/src
 ENV TORCS_BASE=/usr/local/src/torcs-1.3.7
 ENV MAKE_DEFAULT=$TORCS_BASE/Make-default.mk
-ENV LD_LIBRARY_PATH=/usr/local/lib
+#ENV LD_LIBRARY_PATH=
+ENV ACE_ROOT=/usr/local/src/OpenDDS-3.31.0/ACE_wrappers
+#ENV CIAO_ROOT="unused"
+#ENV DANCE_ROOT="unused"
+ENV DDS_ROOT="/usr/local/src/OpenDDS-3.31.0"
+ENV LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib:/usr/local/src/OpenDDS-3.31.0/ACE_wrappers/lib:/usr/local/src/OpenDDS-3.31.0/lib"
+ENV MPC_ROOT="/usr/local/src/OpenDDS-3.31.0/ACE_wrappers/MPC"
+ENV PATH="$PATH:/usr/local/src/OpenDDS-3.31.0/ACE_wrappers/bin:/usr/local/src/OpenDDS-3.31.0/bin"
+ENV TAO_ROOT="/usr/local/src/OpenDDS-3.31.0/ACE_wrappers/TAO"
+
 
 #not needed since the container is run as root
 #RUN chown -R $USER torcs-1.3.7
-
-CMD ["/bin/bash"]

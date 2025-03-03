@@ -54,7 +54,7 @@ CXXFLAGS =  -g -O2 -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLE
 CFLAGS   =  -g -O2 -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES -Wall -fPIC -fno-strict-aliasing -O2 -DUSE_RANDR_EXT -DGL_GLEXT_PROTOTYPES ${CFLAGSD}
 
 #EXT_LIBS = -lpthread -lplibjs -lplibssgaux -lplibssg -lplibsm -lplibsl -lplibsg -lplibul -lglut -lGLU -lGL -lpng -lz -ldl -lXrandr -lXrender -lXxf86vm -lXmu -lXi -lXt -lSM -lICE -lXext -lX11 -lm 
-EXT_LIBS = -lplibjs -lplibssgaux -lplibssg -lplibsm -lplibsl -lplibsg -lplibul -lglut -lGLU -lGL -lpng -lz -ldl -lXrandr -lXrender -lXxf86vm -lXmu -lXi -lXt -lSM -lICE -lXext -lX11 -lm -l"OpenDDS_Rtps_Udp$(LIBSUFFIX)" -l"OpenDDS_Rtps$(LIBSUFFIX)" -l"OpenDDS_InfoRepoDiscovery$(LIBSUFFIX)" -l"OpenDDS_Tcp$(LIBSUFFIX)" -l"OpenDDS_Dcps$(LIBSUFFIX)" -l"TAO_BiDirGIOP$(LIBSUFFIX)" -l"TAO_PI$(LIBSUFFIX)" -l"TAO_CodecFactory$(LIBSUFFIX)" -l"TAO_Valuetype$(LIBSUFFIX)" -l"TAO_PortableServer$(LIBSUFFIX)" -l"TAO_AnyTypeCode$(LIBSUFFIX)" -l"TAO$(LIBSUFFIX)" -l"ACE$(LIBSUFFIX)" -ldl $(subst lib,-l,$(sort $(basename $(notdir $(wildcard /usr/lib/librt.so /lib/librt.so))))) -lpthread
+EXT_LIBS = -lplibjs -lplibssgaux -lplibssg -lplibsm -lplibsl -lplibsg -lplibul -lglut -lGLU -lGL -lpng -lz -ldl -lXrandr -lXrender -lXxf86vm -lXmu -lXi -lXt -lSM -lICE -lXext -lX11 -lm
 #LDFLAGS =   -lopenal -lalut -lvorbisfile -L${EXPORTBASE}/lib -L/usr/lib -L/usr/local/lib
 LDFLAGS =  -L${EXPORTBASE}/lib  -lopenal -lalut -lvorbisfile -L/usr/lib -L"$(ACE_ROOT)/lib" -L"$(DDS_ROOT)/lib"
 

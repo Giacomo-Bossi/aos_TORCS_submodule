@@ -1,68 +1,70 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.2/containers/ubuntu.
 {
-    "name": "weblatex",
-    "image": "sanjibsen/weblatex:latest", // Reference: https://github.com/sanjib-sen/weblatex-docker.
-    "remoteUser": "root", // Don't change this!
-    "features": {},
-    "customizations": {
-      "vscode": {
-        "settings": {
-          "latex-workshop.latex.clean.fileTypes": [
-            "*.aux",
-            "*.bbl",
-            "*.blg",
-            "*.idx",
-            "*.ind",
-            "*.lof",
-            "*.lot",
-            "*.out",
-            "*.toc",
-            "*.acn",
-            "*.acr",
-            "*.alg",
-            "*.glg",
-            "*.glo",
-            "*.gls",
-            "*.fls",
-            "*.log",
-            "*.fdb_latexmk",
-            "*.snm",
-            "*.synctex(busy)",
-            "*.synctex.gz(busy)",
-            "*.nav",
-            "*.vrb",
-            "*.gz", // Added manually.
-            "*.bcf", // Added manually.
-            "*.nlo", // Added manually.
-            "*.run.xml" // Added manually.
-          ],
-          "latex-workshop.latex.outDir": "./PDF",
-          "latex-workshop.latex.autoClean.run": "onBuilt",
-          "latex-workshop.latex.build.forceRecipeUsage": false,
-          "latex-workshop.synctex.afterBuild.enabled": true,
-          "latex-workshop.view.pdf.viewer": "tab",
-          "latex-workshop.latex.clean.subfolder.enabled": true,
-          "latex-workshop.latex.magic.args": [
-            "-output-directory=PDF",
-            "%DOC%"
-          ],
-          "latex-workshop.view.pdf.color.dark.pageColorsBackground": "#171717",
-          "latex-workshop.latex.autoBuild.run": "never",
-          "latex-workshop.view.pdf.color.dark.pageColorsForeground": "#FFFFFF",
-          "latex-workshop.view.pdf.color.dark.backgroundColor": "#171717",
-          "latex-workshop.latex.pdfWatch.delay": 500,
-          "latex-workshop.codespaces.portforwarding.openDelay": 2048,
-          "latex-workshop.formatting.latex": "latexindent",
-          "editor.formatOnSave": true,
-          "editor.rulers": [
-            120
-          ]
-        },
-        "extensions": [
-          "James-Yu.latex-workshop",
-          "GitHub.copilot"
+  "name": "weblatex",
+  "image": "sanjibsen/weblatex:latest", // Reference: https://github.com/sanjib-sen/weblatex-docker.
+  "remoteUser": "root", // Don't change this!
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "latex-workshop.latex.clean.fileTypes": [
+          "*.aux",
+          "*.bbl",
+          "*.blg",
+          "*.idx",
+          "*.ind",
+          "*.lof",
+          "*.lot",
+          "*.out",
+          "*.toc",
+          "*.acn",
+          "*.acr",
+          "*.alg",
+          "*.glg",
+          "*.glo",
+          "*.gls",
+          "*.fls",
+          "*.log",
+          "*.fdb_latexmk",
+          "*.snm",
+          "*.synctex(busy)",
+          "*.synctex.gz(busy)",
+          "*.synctex.gz",
+          "*.nav",
+          "*.vrb",
+          "*.gz", // Added manually.
+          "*.bcf", // Added manually.
+          "*.nlo", // Added manually.
+          "*.run.xml" // Added manually.
+        ],
+        "latex-workshop.latex.outDir": "./PDF",
+        "latex-workshop.latex.autoClean.run": "onBuilt",
+        "latex-workshop.latex.build.forceRecipeUsage": false,
+        "latex-workshop.synctex.afterBuild.enabled": false,
+        "latex-workshop.view.pdf.viewer": "tab",
+        "latex-workshop.latex.clean.subfolder.enabled": true,
+        "latex-workshop.latex.magic.args": [
+          "-output-directory=PDF",
+          "%DOC%"
+        ],
+        "latex-workshop.view.pdf.color.dark.pageColorsBackground": "#171717",
+        "latex-workshop.latex.autoBuild.run": "never",
+        "latex-workshop.view.pdf.color.dark.pageColorsForeground": "#FFFFFF",
+        "latex-workshop.view.pdf.color.dark.backgroundColor": "#171717",
+        "latex-workshop.latex.pdfWatch.delay": 500,
+        "latex-workshop.codespaces.portforwarding.openDelay": 2048,
+        "latex-workshop.formatting.latex": "latexindent",
+        "editor.formatOnSave": true,
+        "editor.rulers": [
+          120
         ]
-      }
+      },
+      "extensions": [
+        "James-Yu.latex-workshop",
+        "GitHub.copilot",
+        "streetsidesoftware.code-spell-checker"
+      ]
     }
   }
+}

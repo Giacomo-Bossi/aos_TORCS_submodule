@@ -91,16 +91,14 @@ the requirement needed to verify the proof of concept.
 
 \subsubsection{Design of First Proof of Concept}
 
-\par For the first Proof Of Concept we decided to create two topics in the DDS environment,
+\par For the first Proof Of Concept we decided to create one topics in the DDS environment,
 using the VSS standard for the steering commands:
 \begin{itemize}
   \item SteeringInformation: it's used to send the steering commands to the TORCS simulator.
-        % decide if second topic is really necessary
-  \item WheelInformation: it's used to send the wheels rotation information from the TORCS simulator to the ECU.
 \end{itemize}
 
-\par The ECU will have a Publisher for the SteeringInformation topic and a Subscriber for the WheelInformation topic.
-The TORCS simulator will have a Subscriber for the SteeringInformation topic and a Publisher for the WheelInformation topic.
+\par The ECU will have a Publisher for the SteeringInformation topic.
+The TORCS simulator will have a Subscriber for the SteeringInformation.
 
 \begin{figure}[H]
   \centering
@@ -108,9 +106,6 @@ The TORCS simulator will have a Subscriber for the SteeringInformation topic and
   \caption{Schematization of the first proof of concept}
   \label{fig:schematization-poc-1}
 \end{figure}
-
-\subsubsection{Design of Second Proof of Concept}
-
 
 \section{Project outcomes}
 
@@ -120,6 +115,49 @@ For those who choose to work on an open source project, please put here the
 \textbf{URL to your final pull request}.
 
 Those that have chosen to present a paper can include a link to the slides.
+
+\subsubsection{Subscriber Implementation}
+
+\par The implementation of the OpenDDS Subscriber is done in a bot callen AOS\textunderscore dds\textunderscore hwloop.
+We implemented specific classes that are used in the bot methods when the race is being created and when the race is
+started.
+
+\par When TORCS invokes the method \texttt{AOS\textunderscore dds\textunderscore hwloop::newrace}, the bot will initialize a static Subscriber object
+that will do all the configuration needed to create the DDS Domain and Topic to which then it will subscribe and listen
+to the messages sent by the ECU.
+
+\par Then when TORCS invokes the method \texttt{AOS\_dds\_hwloop::drive}, the bot will call the method \texttt{Subscriber::pop\_command}
+that return the value in the queue, if no message is present then the steering value is of 0 degree.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.0\textwidth]{Images/UML_1PoC_Subscriber.pdf}
+  \caption{UML diagram of the Subscriber implementation}
+  \label{fig:uml-subscriber-poc-1}
+\end{figure}
+
+\par The topic in the TORCS code has been defined in the file SteeringInformation.idl then to generate the source code
+from it we created an MPC file that then generated a specific Makefile to create all this files:
+
+\begin{itemize}
+  \item SteeringInformationC.cpp
+  \item SteeringInformationC.h
+  \item SteeringInformationC.inl
+  \item SteeringInformationS.cpp
+  \item SteeringInformationS.h
+  \item SteeringInformationTypeSupport.idl
+  \item SteeringInformationTypeSupportC.cpp
+  \item SteeringInformationTypeSupportC.h
+  \item SteeringInformationTypeSupportC.inl
+  \item SteeringInformationTypeSupportImpl.cpp
+  \item SteeringInformationTypeSupportImpl.h
+  \item SteeringInformationTypeSupportS.cpp
+  \item SteeringInformationTypeSupportS.h
+
+\end{itemize}
+
+\subsubsection{Publisher Implementation}
+
 
 \subsection{Learning outcomes}
 

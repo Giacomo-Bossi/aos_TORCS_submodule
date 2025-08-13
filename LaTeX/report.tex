@@ -48,8 +48,11 @@
 
         \begin{itemize}
           \item Bossi configured the Docker environment to simplify the development process.
+          \item Bossi configured Qemu emulator to run the ECU that runs FreeRTOS
+          \item Bossi developed the Uart interrupt to handle the reading of the host keyboard
           \item Apollonio worked on the integration of the OpenDDS library within the TORCS simulator.
-          \item ...
+          \item Apollonio developed some high level examples to demonstrate the usage of the DDS communication.
+          \item Apollonio developed the network configuration for the DDS communication on the FreeRTOS ECU.
         \end{itemize}
 
   \item Links to the project source code; Put here, if available, links to public repos hosting your project
@@ -84,9 +87,11 @@ communication between a ECU, being it a real one or a simulated one, and the TOR
 \subsection{Design and implementation}
 
 
-\par For each proof of concept we developed a specific bot that need to be selected in the TORCS simulator.
-The bot will have the Publisher and Subscriber functionalities to communicate with the DDS environment based on
-the requirement needed to verify the proof of concept.
+\par We managed to implement the First Proof of Concept, with the communication between the ECU and the TORCS simulator working as expected.
+
+\par For the Second Proof of Concept we managed to link the physical engine of the TORCS simulator to where the pilot need to be implemented,
+but after analyzing the engine code we realized that the to implement the torque vectoring algorithm we need to modify the engine code
+to calculate all the velocity and acceleration values based on the torque, because as it is now the torque are just for reading purposes.
 
 
 \subsubsection{Design of First Proof of Concept}
@@ -118,7 +123,7 @@ Those that have chosen to present a paper can include a link to the slides.
 
 \subsubsection{Subscriber Implementation}
 
-\par The implementation of the OpenDDS Subscriber is done in a bot callen AOS\textunderscore dds\textunderscore hwloop.
+\par The implementation of the OpenDDS Subscriber is done in a bot called AOS\textunderscore dds\textunderscore hwloop.
 We implemented specific classes that are used in the bot methods when the race is being created and when the race is
 started.
 
@@ -127,7 +132,8 @@ that will do all the configuration needed to create the DDS Domain and Topic to 
 to the messages sent by the ECU.
 
 \par Then when TORCS invokes the method \texttt{AOS\_dds\_hwloop::drive}, the bot will call the method \texttt{Subscriber::pop\_command}
-that return the value in the queue, if no message is present then the steering value is of 0 degree.
+that return the value in the queue, if no message is present then the steering value is the last available one that was received, based on the
+fact that a steering wheel if left without user input will return to it's base position that is 0 degree.
 
 \begin{figure}[H]
   \centering
@@ -157,6 +163,25 @@ from it we created an MPC file that then generated a specific Makefile to create
 \end{itemize}
 
 \subsubsection{Publisher Implementation}
+
+\par The implementation of the DDS Publisher into the ECU is divided into two main components:
+\begin{itemize}
+  \item The first component is responsible for all the network handling so it's the one responsible for the usage of the XRCE-DDS
+        library to manage the communication with the DDS environment.
+
+  \item The second component is responsible for the reading of the input from the user on the Qemu emulator terminal so it's the one that
+        handles the user commands and parses them to create the appropriate values to add onto the DDS topic.
+
+\end{itemize}
+
+\par For the first component it was necessary to include into the project the library and code of the FreeRTOS Plus TCP to manage
+the TCP/IP stack and provide the necessary networking capabilities. Then we included the necessary files and code of the libraries
+of XRCE-DDS-Client and Micro-CDR to handle the DDS communication.
+
+\par Into the code it was necessary to enable the Ethernet IRQ and set it's priority. We decided to set the priority to 5, one
+above the System Call interrupt priority, and another thing that needed to be done was the dimension of the stack size of the
+task that handles the network, it was set as 8 times the minimum stack size.
+The minimum stack size was set in the FreeRTOSConfigFile as 512.
 
 
 \subsection{Learning outcomes}

@@ -162,27 +162,52 @@ from it we created an MPC file that then generated a specific Makefile to create
 
 \end{itemize}
 
-\subsubsection{Publisher Implementation}
+\subsubsection{Publisher Implementation and ECU code design}
 
-\par The implementation of the DDS Publisher into the ECU is divided into two main components:
+% \begin{comment}
+% \par For the first component it was necessary to include into the project the library and code of the FreeRTOS Plus TCP to manage
+% the TCP/IP stack and provide the necessary networking capabilities. Then we included the necessary files and code of the libraries
+% of XRCE-DDS-Client and Micro-CDR to handle the DDS communication.
+%
+% \par Into the code it was necessary to enable the Ethernet IRQ and set it's priority. We decided to set the priority to 5, one
+% above the System Call interrupt priority, the highest priority that ensures the proper functioning of FreeRTOS ISR safe functions.
+% Another thing that needed to be done was the dimension of the stack size of the task that handles the network, it was set as 8 times the minimum stack size.
+% The minimum stack size was set in the FreeRTOSConfigFile as 512.
+% \end{comment}
+
+\par The MCU code has has two functional requirements to fulfill:
+
 \begin{itemize}
-  \item The first component is responsible for all the network handling so it's the one responsible for the usage of the XRCE-DDS
-        library to manage the communication with the DDS environment.
-
-  \item The second component is responsible for the reading of the input from the user on the Qemu emulator terminal so it's the one that
-        handles the user commands and parses them to create the appropriate values to add onto the DDS topic.
-
+  \item Being able to receive an input from the user and process it to create the appropriate values to add onto the DDS topic.
+  \item Using the DDS library to publish the steering angle data for the TORCS simulator.
 \end{itemize}
 
-\par For the first component it was necessary to include into the project the library and code of the FreeRTOS Plus TCP to manage
-the TCP/IP stack and provide the necessary networking capabilities. Then we included the necessary files and code of the libraries
-of XRCE-DDS-Client and Micro-CDR to handle the DDS communication.
+\par In order to receive data we decided to use the UART interface and read from a stream of chars. This is because QEMU
+offers different ways to expose such interface , like stdin or a tcp port, which makes using the code more flexible.
+In order to read the stream of chars we decided, given the real-time nature of the application, that a polling driver was
+a bad idea due to the waste of clock cycles. Avoiding wasted clock cycles is a principle that guided the entire application
+design, not just the UART interface. As a consequence we decided to use an interrupt-driven approach to handle the incoming data.
 
-\par Into the code it was necessary to enable the Ethernet IRQ and set it's priority. We decided to set the priority to 5, one
-above the System Call interrupt priority, and another thing that needed to be done was the dimension of the stack size of the
-task that handles the network, it was set as 8 times the minimum stack size.
+\par The interrupt priority was set to 5, one above the System Call interrupt priority, which is the highest priority that ensures the proper
+functioning of FreeRTOS ISR safe functions. The interrupt is very simple it just pushes the chars onto a queue so that another
+task will process them.
+
+\par About the DDS communication, we decided to use the XRCE-DDS library to handle the communication with the TORCS simulator due to many different reasons:
+
+\begin{itemize}
+  \item The XRCE-DDS library is lightweight and designed for resource-constrained environments, making it suitable for our MCU due
+        to a lower resource usage compared to other DDS implementations.
+  \item The XRCE implementation has direct support to FreeRTOS, which simplifies enormously the integration because other
+        implementations rely on a full POSIX API which FreeRTOS does not have.
+\end{itemize}
+\par To enable DDS we first needed a working TCP/IP stack, so it was necessary to include into the project the library and
+code of the FreeRTOS Plus TCP along side the XRCE-DDS library.
+Into the code it was necessary to enable the Ethernet IRQ and set it's priority. This priority is also 5 for the same reason
+as the UART interrupt.
+Another thing that needed to be done was the dimension of the stack size of the task that handles the network, it was set as 8 times the minimum stack size.
 The minimum stack size was set in the FreeRTOSConfigFile as 512.
-
+The last thing needed to enable communication was to configure QEMU to do port forwarding between the virtual board and the host machine.
+As briefly mentioned before the communication should use the VSS standard. So a .idl file obtained from the standard is used to construct the type for the topic.
 
 \subsection{Learning outcomes}
 

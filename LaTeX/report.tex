@@ -209,6 +209,33 @@ The minimum stack size was set in the FreeRTOSConfigFile as 512.
 The last thing needed to enable communication was to configure QEMU to do port forwarding between the virtual board and the host machine.
 As briefly mentioned before the communication should use the VSS standard. So a .idl file obtained from the standard is used to construct the type for the topic.
 
+\subsection{Tasks and Synchronization}
+\par Here is a schematization of the tasks and how they are synchronized:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.0\textwidth]{Images/ECU_schema.pdf}
+  \caption{Synchronization schema}
+  \label{fig:ECU_schema}
+\end{figure}
+
+\par The picture shows that there are two high priority tasks, the POC1\_loop that updates the YAW variable according to the received
+data and the DDS\_task that is responsible for publishing the data to the DDS topic. The POC1\_loop task is triggered by the UART interrupt
+as waiting on the queue is blocking until new data arrives. YAW updates are controlled with a mutex to ensure no race conditions.
+
+\par The DDS\_task is designed to supply a constant stream of messages and so it tries to acquire the mutex for a maximum of 100ms before
+defaulting and sending again the last value. This ensures a smooth flow of data without gaps under all circumstances.
+
+\par Two low priority tasks are also present, as extra "accessories" to the application. These tasks are Steer\_correction and Debug\_info.
+Steer\_correction is used to slowly turn the YAW angle towards zero, while Debug\_info (which can be deactivated by setting \texttt{DEBUG\_INFO = 0})
+is used to display debugging information like received chars and YAW value. Debug\_info waits for a semaphore given by the UART interrupt to run,
+so it will run at most once per interrupt, displaying the updated data.
+
+\par The fact that the Steer\_correction task is low priority might look like it would cause issues if it is preempted by higher priority
+tasks that needs the mutex while Steer\_correction is holding it. However FreeRTOS offers a
+\href{https://www.freertos.org/Documentation/02-Kernel/02-Kernel-features/02-Queues-mutexes-and-semaphores/04-Mutexes#simplified-priority-inheritance}{priority inheritance}
+mechanism that given the shortness of the critical session is a good enough solution.
+
 \subsection{Learning outcomes}
 
 What was the most important thing all the members have learned while
@@ -217,13 +244,19 @@ how you will use what you've learned in your everyday life?
 Please also indicate which tools you learned to use.
 
 Examples:
+This project pushed us not just to better understand the intricacies of FreeRTOS and real-time systems and the structure of cpp project
+but also forced us to learn in a more mature way a lot of tools like Make and GDB that were mandatory for the development process.  %non mi piace
 
+Some more detailed examples are:
 \begin{itemize}
-  \item Foo learned to write multithreaded applications, he's probably going to
-        create his own startup with what she has learned. She also learned how to
-        debug with gdb.
-  \item Bar learned how to interact with the open source community, politely
-        answering to code reviews and issuing pull requests through Git.
+  \item We both had to deal with non-trivial build systems for project. Marco had to work on how to integrate the OpenDDs library to the
+        TORCS codebase and it required significant effort in adapting the build system. Giacomo had to adapt the FreeRTOS Makefile to
+        work in project folder structure. Identifying all the necessary files from FreeRtos, FreeRtos plus TCP, XRCE_DDS and make sure they were getting
+        linked correctly alongside our files while also keeping an organized structure to the project requires some effort.
+  \item Giacomo had to use GDB to debug an issue during the integration of FreeRTOS plus TCP to the base FreeRTOS codebase.
+        More details in the Problems encountered section. This already proved to be a useful skill as we had to use GDB again for the Computer Security course challenges.
+  \item Giacomo has learned how to interface with devices when he had to implement the UART interrupt driver.
+        %aggiungi ancora qualcosa
 \end{itemize}
 
 \subsection{Existing knowledge}

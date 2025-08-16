@@ -245,18 +245,20 @@ Please also indicate which tools you learned to use.
 
 Examples:
 This project pushed us not just to better understand the intricacies of FreeRTOS and real-time systems and the structure of cpp project
-but also forced us to learn in a more mature way a lot of tools like Make and GDB that were mandatory for the development process.  %non mi piace
+but also forced us to learn in a more mature way a lot of tools like Make and GDB that were mandatory for the development process.
+We already knew about these tools and their purpose but we either never used them directly or used them for trivial stuff.
 
 Some more detailed examples are:
+%aggiungi ancora qualcosa
 \begin{itemize}
-  \item We both had to deal with non-trivial build systems for project. Marco had to work on how to integrate the OpenDDs library to the
+  \item We both had to deal with non-trivial build systems for projects. Marco had to work on how to integrate the OpenDDs library to the
         TORCS codebase and it required significant effort in adapting the build system. Giacomo had to adapt the FreeRTOS Makefile to
-        work in project folder structure. Identifying all the necessary files from FreeRtos, FreeRtos plus TCP, XRCE_DDS and make sure they were getting
+        work in project folder structure. Identifying all the necessary files from FreeRtos, FreeRtos plus TCP, XRCE\_DDS and making sure they were getting
         linked correctly alongside our files while also keeping an organized structure to the project requires some effort.
   \item Giacomo had to use GDB to debug an issue during the integration of FreeRTOS plus TCP to the base FreeRTOS codebase.
         More details in the Problems encountered section. This already proved to be a useful skill as we had to use GDB again for the Computer Security course challenges.
-  \item Giacomo has learned how to interface with devices when he had to implement the UART interrupt driver.
-        %aggiungi ancora qualcosa
+  \item Giacomo has learned how to interface with devices and use bit manipulating techniques when he had to implement the UART interrupt driver.
+
 \end{itemize}
 
 \subsection{Existing knowledge}
@@ -269,8 +271,18 @@ What were the most important problems and issues you encountered? Did you ever
 encountered them before?
 
 \begin{itemize}
-  \item Foo encountered a problem with some critical sections. He ended up
-        rewriting existing lock implementation.
+  \item As mentioned before, Giacomo encountered a problem when integrating the FreeRTOS plus TCP library to the base FreeRTOS codebase. The problem was
+        caused by the fact that the Interrupt Vector Table used in the base FreeRTOS did not contain the Ethernet IRQ handler.
+        As a consequence after calling \texttt{FreeRTOS\_IPInit\_Multi()} to initialize the network stack, the Ethernet IRQs were crashing the application
+        due to a null pointer exception. The error seemed to be triggered by \texttt{FreeRTOS\_IPInit\_Multi()} since it will trigger before it returned.
+        The first thing he looked at is if whether he gathered all of the FreeRTOS plus TCP files and correctly included in the project.
+        After that he looked at possible issues with the drivers of the NIC but found nothing.
+        In order to pinpoint the true issue, Giacomo had to spend quite some time on GDB to debug the problem. The fix was just adding a
+        reference to the Ethernet IRQ handler in the Interrupt Vector Table at the correct position.
+
+  \item Giacomo encountered another minor starvation issue. Due to bad error handling in our code, to prevent the DDS-task from returning
+        after a setup error (ex. agent was not running) we were wrongly using infinite loops. If this loops were reached they starved completely all of lower priority tasks.
+        This issue was not affecting normal behavior so it wasn't caught early. Now on error the task safely destroys itself by calling \texttt{vTaskDelete(NULL)}.
 \end{itemize}
 
 \section{Honor Pledge}

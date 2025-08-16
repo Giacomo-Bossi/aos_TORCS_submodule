@@ -258,6 +258,9 @@ Some more detailed examples are:
   \item Giacomo had to use GDB to debug an issue during the integration of FreeRTOS plus TCP to the base FreeRTOS codebase.
         More details in the Problems encountered section. This already proved to be a useful skill as we had to use GDB again for the Computer Security course challenges.
   \item Giacomo has learned how to interface with devices and use bit manipulating techniques when he had to implement the UART interrupt driver.
+  \item Marco has learned how does Makefile work and how different files can be nested to compile a single project, he discovered the configuration options available in Makefile config file.
+        He is now able to create more complex build systems and understand the dependencies between different source files.
+  \item Marco has learned how the DDS protocol works, the possible configuration available and the different compatibilities between the different distribution as OpenDDS and XRCE-DDS.
 
 \end{itemize}
 
@@ -283,6 +286,15 @@ encountered them before?
   \item Giacomo encountered another minor starvation issue. Due to bad error handling in our code, to prevent the DDS-task from returning
         after a setup error (ex. agent was not running) we were wrongly using infinite loops. If this loops were reached they starved completely all of lower priority tasks.
         This issue was not affecting normal behavior so it wasn't caught early. Now on error the task safely destroys itself by calling \texttt{vTaskDelete(NULL)}.
+
+  \item Marco encountered some issues with the OpenDDS library, specifically with the building process and the configuration options available in the library.
+        because in the documentation it was always done with automatic systems that generated the specific file needed, but due to the already existing Makefile
+        used by TORCS he needed a custom solution to integrate the library properly.
+
+  \item Marco also encountered another problem while trying to understand the feasibility of the Second Proof of Concept, because he needed to link the physical
+        engine shared object to the pilot, but he was unsure about the correct linking process and the dependencies involved. He discovered the existence of
+        specific linux commands such as \texttt{ldd} that can be used to check the dependencies of a shared object and how to link them correctly.
+
 \end{itemize}
 
 \section{Honor Pledge}

@@ -64,10 +64,6 @@
 
 \textbf{2 pages max please}
 
-\begin{itemize}
-  \item What is your project about?
-  \item Why it is important for the AOS course?
-\end{itemize}
 
 \subsection{Introduction}
 
@@ -115,11 +111,6 @@ The TORCS simulator will have a Subscriber for the SteeringInformation.
 \section{Project outcomes}
 
 \subsection{Concrete outcomes}
-Describe the artifacts you've produced, if possible by linking to repo commits.
-For those who choose to work on an open source project, please put here the
-\textbf{URL to your final pull request}.
-
-Those that have chosen to present a paper can include a link to the slides.
 
 \subsubsection{Subscriber Implementation}
 
@@ -163,17 +154,6 @@ from it we created an MPC file that then generated a specific Makefile to create
 \end{itemize}
 
 \subsubsection{Publisher Implementation and ECU code design}
-
-% \begin{comment}
-% \par For the first component it was necessary to include into the project the library and code of the FreeRTOS Plus TCP to manage
-% the TCP/IP stack and provide the necessary networking capabilities. Then we included the necessary files and code of the libraries
-% of XRCE-DDS-Client and Micro-CDR to handle the DDS communication.
-%
-% \par Into the code it was necessary to enable the Ethernet IRQ and set it's priority. We decided to set the priority to 5, one
-% above the System Call interrupt priority, the highest priority that ensures the proper functioning of FreeRTOS ISR safe functions.
-% Another thing that needed to be done was the dimension of the stack size of the task that handles the network, it was set as 8 times the minimum stack size.
-% The minimum stack size was set in the FreeRTOSConfigFile as 512.
-% \end{comment}
 
 \par The MCU code has has two functional requirements to fulfill:
 
@@ -238,12 +218,6 @@ mechanism that given the shortness of the critical session is a good enough solu
 
 \subsection{Learning outcomes}
 
-What was the most important thing all the members have learned while
-developing this part of the project, what questions remained unanswered,
-how you will use what you've learned in your everyday life?
-Please also indicate which tools you learned to use.
-
-Examples:
 This project pushed us not just to better understand the intricacies of FreeRTOS and real-time systems and the structure of cpp project
 but also forced us to learn in a more mature way a lot of tools like Make and GDB that were mandatory for the development process.
 We already knew about these tools and their purpose but we either never used them directly or used them for trivial stuff.
@@ -269,9 +243,10 @@ What courses you have followed (not only AOS) did help you in doing this project
 and why? Do you have any suggestions on improving the AOS course with topics
 that would have made it easier for you?
 
+
+
 \subsection{Problems encountered}
-What were the most important problems and issues you encountered? Did you ever
-encountered them before?
+
 
 \begin{itemize}
   \item As mentioned before, Giacomo encountered a problem when integrating the FreeRTOS plus TCP library to the base FreeRTOS codebase. The problem was

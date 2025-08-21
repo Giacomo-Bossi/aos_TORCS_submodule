@@ -218,9 +218,11 @@ mechanism that given the shortness of the critical session is a good enough solu
 
 \subsection{Learning outcomes}
 
-This project pushed us not just to better understand the intricacies of FreeRTOS and real-time systems and the structure of cpp project
-but also forced us to learn in a more mature way a lot of tools like Make and GDB that were mandatory for the development process.
+This project pushed us not just to better understand the workings of FreeRTOS and real-time systems and the structure of cpp projects
+but also forced us to learn in a more advanced way a lot of tools like Make and GDB that were mandatory for the development process.
 We already knew about these tools and their purpose but we either never used them directly or used them for trivial stuff.
+An example of this is the Make rule: \texttt{print-\% : ; @echo \$* = \$(\$*)}. This rule we learned proved to be extremely useful
+for troubleshooting with Make variables.
 
 Some more detailed examples are:
 %aggiungi ancora qualcosa
@@ -242,6 +244,11 @@ Some more detailed examples are:
 What courses you have followed (not only AOS) did help you in doing this project
 and why? Do you have any suggestions on improving the AOS course with topics
 that would have made it easier for you?
+
+For what concerns me, Giacomo, AOS and its predecessor ACSO are the courses that helped me the most in this project because of obvious reasons.
+The only other course that I feel like it's worth mentioning is the seemingly disconnected Robotics course. The course of robotics introduced me
+to Docker, C++, and working in a Linux environment, all of which were very useful in this project. Also the ROS framework used in the Robotics course
+is based on DDS , so I found some similarities in the way they work.
 
 
 

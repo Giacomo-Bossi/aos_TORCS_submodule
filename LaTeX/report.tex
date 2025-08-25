@@ -233,7 +233,9 @@ Some more detailed examples are:
         linked correctly alongside our files while also keeping an organized structure to the project requires some effort.
   \item Giacomo had to use GDB to debug an issue during the integration of FreeRTOS plus TCP to the base FreeRTOS codebase.
         More details in the Problems encountered section. This already proved to be a useful skill as we had to use GDB again for the Computer Security course challenges.
-  \item Giacomo has learned how to interface with devices and use bit manipulating techniques when he had to implement the UART interrupt driver.
+  \item Giacomo has learned how to interface with devices at different levels of abstraction, register level and OS level.
+        The UART driver in the QEMU application required to use bit manipulating techniques typical of register level drivers programming.
+        Instead when writing the controller_reader program an higher level of interface was used, relying on the OS abstractions provided by Linux.
   \item Marco has learned how does Makefile work and how different files can be nested to compile a single project, he discovered the configuration options available in Makefile config file.
         He is now able to create more complex build systems and understand the dependencies between different source files.
   \item Marco has learned how the DDS protocol works, the possible configuration available and the different compatibilities between the different distribution as OpenDDS and XRCE-DDS.
